@@ -1,36 +1,32 @@
+
 var myNinjaApp = angular.module('myNinjaApp', []);
 
 
 
+
 myNinjaApp.controller('NinjaController', ['$scope', function($scope){
-    $scope.message = "hey";
+    $scope.everything = {
+        
+        
+        
+        getData: function(){
+            arr = [];
+            var response = fetch('App/Lib/nasdaqsymbols.txt').then(response => {console.log(response)});
 
-    $scope.randomValues = [
-        {
-            name: "Brandon",
-            emotion: "annoyed"
-        }
-    ];
+            var allLines = data.split('\n').slice(1);
+            allLines.forEach(row => {
+                var splitLine = row.split('|');
+                var thisTicker = splitLine[0];
+                arr.push(thisTicker);
+            })
+            console.log(arr);
+            return arr;
+          }
+    }
     
     
     
-    async function getData(){
-        var ret = [];
-        var response = await fetch('App/Lib/nasdaqsymbols.txt');
-        var data = await response.text();
 
-        var allLines = data.split('\n').slice(1);
-        allLines.forEach(row => {
-            var splitLine = row.split('|');
-            ret.push(splitLine[0]);
-            console.log(splitLine[0]);
-        })
-        return ret;
-    };
-    
-    $scope.data = getData();
-    console.log($scope.data);
-    
     
     
 }]);

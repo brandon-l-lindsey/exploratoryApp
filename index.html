@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" ng-app="myNinjaApp">
+<html lang="en" ng-app="myApp">
     
   <head>
       <meta charset="utf-8"/>
@@ -15,11 +15,77 @@
     
   <body>
       
-      <div ng-controller="NinjaController">
-        <p>{{message}}</p>
-        <p>{{data}}</p>
-      </div>
       
+      
+      <script>
+          
+          var myApp = angular.module('myApp', []);
+          
+          
+            
+          async function getData(){
+            arr = [];
+            var response = await fetch('App/Lib/nasdaqsymbols.txt');
+            var data = await response.text();
+
+            var allLines = data.split('\n').slice(1);
+            allLines.forEach(row => {
+                var splitLine = row.split('|');
+                var thisTicker = splitLine[0];
+                arr.push(thisTicker);
+            })
+            return arr;
+          };
+
+          async function returnData(){
+              var myData = await getData();
+              return myData;
+          }
+          
+         
+          
+        
+          myApp.controller('DataController', ['$scope', function($scope){
+              $scope.tickers = returnData();
+              
+              $scope.getData = async function(){
+                arr = [];
+                var response = await fetch('App/Lib/nasdaqsymbols.txt');
+                var data = await response.text();
+
+                var allLines = data.split('\n').slice(1);
+                allLines.forEach(row => {
+                    var splitLine = row.split('|');
+                    var thisTicker = splitLine[0];
+                    arr.push(thisTicker);
+                })
+                return arr;
+              };
+
+              $scope.returnData = async function(){
+                  var myData = await getData();
+                  return myData;
+              }
+              
+              $scope.allData = $scope.returnData();
+              
+            
+              
+          }]);
+          
+      
+      </script>
+      
+      
+      <div ng-controller="DataController">
+      <input type = "text" ng-model="search" placeholder="Enter Stock Ticker"/>
+      <ul>
+          {{allData}}
+          <li>{{returnData[0]}}</li>
+<!--          <li ng-repeat="ticker in tickers track by $index | filter: search">{{tickers}}</li>-->
+      
+      </ul>
+      </div>
       
       <script src="App/app.js"></script>
 
